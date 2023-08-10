@@ -33,6 +33,6 @@ Search "${issueKey}" in GitLab
 </button>
 </a>`;
 
-    });
+    }, 2000);
 
 })();
