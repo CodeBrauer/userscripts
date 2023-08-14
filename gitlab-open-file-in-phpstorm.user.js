@@ -19,7 +19,7 @@
         link.href = link.href+'?referer='+window.location.href
     });
 
-    const project = $('nav.breadcrumbs  ul.js-breadcrumbs-list li a')[1].pathname;
+    const project = document.querySelectorAll('nav.breadcrumbs  ul.js-breadcrumbs-list li a')[1].pathname;
 
     const loadPreferences = function () {
         if (!window.localStorage.getItem('openInPhpStormSettings')) {
@@ -203,8 +203,10 @@
 
 
     console.log('started');
-    loadPreferences();
-    setLinks();
-    window.setTimeout(initPreferenceButton, 50);
-    window.setInterval(setLinks, 1500);
+    window.addEventListener('load', function() {
+        loadPreferences();
+        setLinks();
+        window.setTimeout(initPreferenceButton, 50);
+        window.setInterval(setLinks, 1500);
+    }, false);
 })();

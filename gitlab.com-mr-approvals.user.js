@@ -12,15 +12,17 @@
 
 (function() {
     'use strict';
-    document.querySelectorAll('.issuable-meta [title*=approv]').forEach(function(row) {
-        let approvals = row.getAttribute('title');
-        let approvalsCount = approvals.match(/\d+/)[0];
-        row.innerHTML = row.innerHTML.replace("Approved", row.getAttribute('title'));
-        if (approvalsCount < 2) {
-            row.classList.remove("text-success");
-            row.classList.add("text-warning");
-        } else if (approvalsCount >= 2) {
-            row.closest('li.merge-request').style.backgroundColor = '#007f0040';
-        }
-    });
+    window.addEventListener('load', function() {
+        document.querySelectorAll('.issuable-meta [title*=approv]').forEach(function(row) {
+            let approvals = row.getAttribute('title');
+            let approvalsCount = approvals.match(/\d+/)[0];
+            row.innerHTML = row.innerHTML.replace("Approved", row.getAttribute('title'));
+            if (approvalsCount < 2) {
+                row.classList.remove("text-success");
+                row.classList.add("text-warning");
+            } else if (approvalsCount >= 2) {
+                row.closest('li.merge-request').style.backgroundColor = '#007f0040';
+            }
+        });
+    }, false);
 })();

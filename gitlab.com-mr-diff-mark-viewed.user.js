@@ -12,7 +12,9 @@
 
 (function() {
     'use strict';
-    Mousetrap.bind('v', function() {
-        document.querySelector("[data-testid='fileReviewCheckbox']").click();
-    });
+    window.addEventListener('load', function() {
+        Mousetrap.bind('v', function() {
+            document.querySelector("[data-testid='fileReviewCheckbox']").click();
+        });
+    }, false);
 })();
