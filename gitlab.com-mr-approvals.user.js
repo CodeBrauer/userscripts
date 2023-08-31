@@ -12,17 +12,37 @@
 
 (function() {
     'use strict';
-    window.addEventListener('load', function() {
-        document.querySelectorAll('.issuable-meta [title*=approv]').forEach(function(row) {
-            let approvals = row.getAttribute('title');
-            let approvalsCount = approvals.match(/\d+/)[0];
-            row.innerHTML = row.innerHTML.replace("Approved", row.getAttribute('title'));
-            if (approvalsCount < 2) {
-                row.classList.remove("text-success");
-                row.classList.add("text-warning");
-            } else if (approvalsCount >= 2) {
+    document.querySelectorAll('li.merge-request').forEach(function(row) {
+
+        let author = row.querySelector('span.author').innerText.trim();
+        let ownUserName = document.querySelector('.header-user .header-user-avatar').getAttribute('alt').trim();
+
+        console.log(author, ownUserName);
+
+        if (author === ownUserName) {
+            // own MR = violetish
+            row.closest('li.merge-request').style.backgroundColor = '#ff00ff18';
+            row.dataSet.ownMr = "true";
+        }
+    });
+
+    document.querySelectorAll('.issuable-meta [title*=approv]').forEach(function(row) {
+
+        let approvals = row.getAttribute('title');
+        let approvalsCount = approvals.match(/\d+/)[0];
+
+        row.innerHTML = row.innerHTML.replace("Approved", row.getAttribute('title'));
+        if (approvalsCount < 2) {
+            row.classList.remove("text-success");
+            row.classList.add("text-warning");
+        } else if (approvalsCount >= 2) {
+            if (row.closest('li.merge-request').dataSet.ownMr == 'true') {
+                // own merge request + approved = brigher green
+                row.closest('li.merge-request').style.backgroundColor = '#007f0080';
+            } else {
+                // others MRs approved = greenish
                 row.closest('li.merge-request').style.backgroundColor = '#007f0040';
             }
-        });
-    }, false);
+        }
+    });
 })();
