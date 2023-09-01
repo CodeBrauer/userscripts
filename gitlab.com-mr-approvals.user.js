@@ -20,9 +20,9 @@
         console.log(author, ownUserName);
 
         if (author === ownUserName) {
-            // own MR = violetish
-            row.closest('li.merge-request').style.backgroundColor = '#ff00ff18';
-            row.dataSet.ownMr = "true";
+            // own MR & no approvals = violetish
+            row.style.backgroundColor = '#ff00ff18';
+            row.dataset.ownMr = "true";
         }
     });
 
@@ -36,7 +36,7 @@
             row.classList.remove("text-success");
             row.classList.add("text-warning");
         } else if (approvalsCount >= 2) {
-            if (row.closest('li.merge-request').dataSet.ownMr == 'true') {
+            if (row.closest('li.merge-request').dataset.ownMr == 'true') {
                 // own merge request + approved = brigher green
                 row.closest('li.merge-request').style.backgroundColor = '#007f0080';
             } else {
@@ -46,3 +46,4 @@
         }
     });
 })();
+
