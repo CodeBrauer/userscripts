@@ -14,58 +14,68 @@
 (function() {
     'use strict';
 
-    // Get all category containers
-    let categoryContainers = Array.from(document.querySelectorAll('[name*="category_"]'));
+    // Helper function to get and set local storage item
+    function getLocalStorageItem(key) {
+        return localStorage.getItem(key);
+    }
 
-    document.querySelector('[class*="productListingPage_content"]').appendChild(document.createElement("input"));
-    document.querySelector('[class*="productListingPage_content"] input').value = parseInt(localStorage.getItem("UsLbRabatt"));
-    document.querySelector('[class*="productListingPage_content"] input').style.marginTop = "16px";
-    document.querySelector('[class*="productListingPage_content"] input').setAttribute("type", "number");
-    document.querySelector('[class*="productListingPage_content"] input').setAttribute("min", "0");
-    document.querySelector('[class*="productListingPage_content"] input').setAttribute("max", "100");
-    document.querySelector('[class*="productListingPage_content"] input').addEventListener("change", function() {
-        localStorage.setItem("UsLbRabatt", document.querySelector('[class*="productListingPage_content"] input').value);
+    function setLocalStorageItem(key, value) {
+        localStorage.setItem(key, value);
+    }
+
+    // Add a discount input field
+    const discountInput = document.createElement("input");
+    discountInput.value = parseInt(getLocalStorageItem("UsLbRabatt")) || 0;
+    discountInput.style.marginTop = "16px";
+    discountInput.type = "number";
+    discountInput.min = "0";
+    discountInput.max = "100";
+    discountInput.addEventListener("change", () => {
+        setLocalStorageItem("UsLbRabatt", discountInput.value);
     });
-    let html = `<span> % Rabatt (Seite neuladen für Neuberechnung)</span>`;
-    document.querySelector('[class*="productListingPage_content"]').insertAdjacentHTML( 'beforeend', html );
 
-    // Iterate over category containers
-    categoryContainers.forEach(function(categoryContainer) {
-        let container = categoryContainer.querySelector('[class*="productListingPage_productContainer"]');
-        let cards = Array.from(categoryContainer.querySelectorAll('[class*="productListingPage_card"]'));
+    const discountLabel = document.createElement('span');
+    discountLabel.textContent = " % Rabatt (Seite neuladen für Neuberechnung)";
 
-        cards.sort(function(a, b) {
-            let priceStrA = a.querySelector('[class*="productListingPage_price"] > span:not([class*="oldPrice"])').innerText.replace("€", "").trim().replace(",",".");
-            let priceFloatA = parseFloat(priceStrA);
+    const contentContainer = document.querySelector('[class*="productListingPage_content"]');
+    contentContainer.appendChild(discountInput);
+    contentContainer.appendChild(discountLabel);
 
-            let priceStrB = b.querySelector('[class*="productListingPage_price"] > span:not([class*="oldPrice"])').innerText.replace("€", "").trim().replace(",",".");
-            let priceFloatB = parseFloat(priceStrB);
+    // Sort products by price and apply discounts
+    const productContainers = Array.from(document.querySelectorAll('[name*="category_"]'));
 
-            return priceFloatA - priceFloatB;
+    productContainers.forEach((container) => {
+        const productCards = Array.from(container.querySelectorAll('[class*="productListingPage_card"]'));
+
+        productCards.sort((a, b) => {
+            const getPrice = (element) => {
+                const priceStr = element.querySelector('[class*="productListingPage_price"] > span:not([class*="oldPrice"])').innerText.replace("€", "").trim().replace(",", ".");
+                return parseFloat(priceStr);
+            };
+
+            return getPrice(a) - getPrice(b);
         });
 
-        cards.forEach(function(card) {
-            container.appendChild(card);
-        });
+        productCards.forEach((card) => {
+            const priceElement = card.querySelector('[class*="productListingPage_price"] > span:not([class*="oldPrice"])');
+            const priceFloat = parseFloat(priceElement.innerText.replace("€", "").trim().replace(",", "."));
 
-        cards.forEach(function(card) {
-            let priceElement = card.querySelector('[class*="productListingPage_price"] > span:not([class*="oldPrice"])');
-            let priceStr = priceElement.innerText.replace("€", "").trim().replace(",",".");
-            let priceFloat = parseFloat(priceStr);
+            const discountPercentage = parseInt(getLocalStorageItem("UsLbRabatt")) || 0;
+            const discountedPriceFloat = priceFloat * (1 - (discountPercentage / 100));
+            const discountedPriceStr = discountedPriceFloat.toFixed(2).replace(".", ",") + " €";
 
-            // Calculate discounted price
-            let discountedPriceFloat = priceFloat * (1-(parseInt(localStorage.getItem("UsLbRabatt"))/100)); // discount
-            let discountedPriceStr = discountedPriceFloat.toFixed(2); // Format to 2 decimal places
-            let discountedPriceFormatted = discountedPriceStr.replace(".", ",") + " €"; // Format with comma and "€" symbol
-
-            // Create new span element for discounted price
-            let discountedPriceElement = document.createElement('span');
+            const discountedPriceElement = document.createElement('span');
             discountedPriceElement.classList.add('discounted-price');
             discountedPriceElement.style.color = 'crimson';
-            discountedPriceElement.textContent = " -"+localStorage.getItem("UsLbRabatt")+"% = " + discountedPriceFormatted;
+            discountedPriceElement.textContent = ` -${discountPercentage}% = ${discountedPriceStr}`;
 
-            // Append the discounted price span after the original price element
             priceElement.insertAdjacentElement('afterend', discountedPriceElement);
+        });
+
+        // Reorder the cards
+        const parentContainer = container.querySelector('[class*="productListingPage_productContainer"]');
+        productCards.forEach((card) => {
+            parentContainer.appendChild(card);
         });
     });
 })();

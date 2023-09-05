@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Lieferando show foodtracker time left in tab title
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.3
 // @description  Adds a sprinkle of excitement to your food tracking experience on Lieferando by displaying the remaining time in the tab title. Never lose track of your eagerly awaited meal again!
 // @author       CodeBrauer
 // @match        https://www.lieferando.de/foodtracker/*
@@ -9,23 +9,30 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
-    'use strict';
+(function () {
+    "use strict";
 
-    function loadData(){
-        var title = "";
+    function updatePageTitle() {
+        const waitingTimeElement = document.querySelector("#scoober-tracker svg tspan");
+        const messageElement = document.querySelector("#scoober-tracker h1:nth-child(1)");
 
-        var n = document.querySelectorAll('#scoober-tracker svg tspan');
-        if(n.length) title += n[0].innerHTML + "min";
+        if (waitingTimeElement) {
+            const waitingTimeMinutes = parseInt(waitingTimeElement.innerHTML);
+            if (!isNaN(waitingTimeMinutes)) {
+                const eta = new Date(
+                    Date.now() + waitingTimeMinutes * 60000
+                ).toLocaleTimeString("de", { timeStyle: "short" });
+                let title = `${waitingTimeMinutes} min (${eta})`;
 
-        var t = document.querySelectorAll('#scoober-tracker h1');
-        if(t.length){
-            if(title!="") title += " - ";
-            title += t[1].innerText;
+                if (messageElement) {
+                    title += ` - ${messageElement.innerText}`;
+                }
+
+                document.title = "🛵 " + title;
+            }
         }
-
-        if(title!="") document.title = "🛵 " + title;
     }
-    setInterval(loadData,10*1000);
-    loadData();
+
+    setInterval(updatePageTitle, 10 * 1000);
+    updatePageTitle();
 })();
