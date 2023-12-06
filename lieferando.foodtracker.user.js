@@ -10,29 +10,33 @@
 // ==/UserScript==
 
 (function () {
-    "use strict";
+  "use strict";
 
-    function updatePageTitle() {
-        const waitingTimeElement = document.querySelector("#scoober-tracker svg tspan");
-        const messageElement = document.querySelector("#scoober-tracker h1:nth-child(1)");
+  function updatePageTitle() {
+    const waitingTimeElement = document.querySelector(
+      "#scoober-tracker svg tspan"
+    );
+    const messageElement = document.querySelector(
+      "#scoober-tracker h1:nth-child(1)"
+    );
 
-        if (waitingTimeElement) {
-            const waitingTimeMinutes = parseInt(waitingTimeElement.innerHTML);
-            if (!isNaN(waitingTimeMinutes)) {
-                const eta = new Date(
-                    Date.now() + waitingTimeMinutes * 60000
-                ).toLocaleTimeString("de", { timeStyle: "short" });
-                let title = `${waitingTimeMinutes} min (${eta})`;
+    if (waitingTimeElement) {
+      const waitingTimeMinutes = parseInt(waitingTimeElement.innerHTML);
+      if (!isNaN(waitingTimeMinutes)) {
+        const eta = new Date(
+          Date.now() + waitingTimeMinutes * 60000
+        ).toLocaleTimeString("de", { timeStyle: "short" });
+        let title = `${waitingTimeMinutes} min (${eta})`;
 
-                if (messageElement) {
-                    title += ` - ${messageElement.innerText}`;
-                }
-
-                document.title = "🛵 " + title;
-            }
+        if (messageElement) {
+          title += ` - ${messageElement.innerText}`;
         }
-    }
 
-    setInterval(updatePageTitle, 10 * 1000);
-    updatePageTitle();
+        document.title = "🛵 " + title;
+      }
+    }
+  }
+
+  setInterval(updatePageTitle, 10 * 1000);
+  updatePageTitle();
 })();

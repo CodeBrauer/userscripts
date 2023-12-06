@@ -10,43 +10,44 @@
 // @run-at       document-idle
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    function waitForElm(selector) {
-        return new Promise(resolve => {
-            if (document.querySelector(selector)) {
-                return resolve(document.querySelector(selector));
-            }
+(function () {
+  "use strict";
+  function waitForElm(selector) {
+    return new Promise((resolve) => {
+      if (document.querySelector(selector)) {
+        return resolve(document.querySelector(selector));
+      }
 
-            const observer = new MutationObserver(mutations => {
-                if (document.querySelector(selector)) {
-                    resolve(document.querySelector(selector));
-                    observer.disconnect();
-                }
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
-
-    waitForElm('.dd-toolbar__page-title').then((elm) => {
-        let orga = document.querySelector(".single-page-app_navbar_bottom-nav__user-settings-item .druids_typography_text--xs").innerText;
-        let orgaEmoji = "";
-        if (orga.includes("XXXXXX")) {
-            orgaEmoji = "🇩🇪";
-        } else if (orga.includes("XXXXXX")) {
-            orgaEmoji = "🇪🇸";
-        } else if (orga.includes("XXXXXX")) {
-            orgaEmoji = "🇨🇭";
+      const observer = new MutationObserver((mutations) => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector));
+          observer.disconnect();
         }
-        let appendOrga = " " + orgaEmoji + " [" + orga + "]";
-        document.querySelector(".dd-toolbar__page-title").innerHTML += appendOrga;
-        setTimeout(function() {
-            document.title += appendOrga;
-        }, 1000);
-    });
+      });
 
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    });
+  }
+
+  waitForElm(".dd-toolbar__page-title").then((elm) => {
+    let orga = document.querySelector(
+      ".single-page-app_navbar_bottom-nav__user-settings-item .druids_typography_text--xs"
+    ).innerText;
+    let orgaEmoji = "";
+    if (orga.includes("XXXXXX")) {
+      orgaEmoji = "🇩🇪";
+    } else if (orga.includes("XXXXXX")) {
+      orgaEmoji = "🇪🇸";
+    } else if (orga.includes("XXXXXX")) {
+      orgaEmoji = "🇨🇭";
+    }
+    let appendOrga = " " + orgaEmoji + " [" + orga + "]";
+    document.querySelector(".dd-toolbar__page-title").innerHTML += appendOrga;
+    setTimeout(function () {
+      document.title += appendOrga;
+    }, 1000);
+  });
 })();

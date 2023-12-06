@@ -10,11 +10,15 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-        Mousetrap.bind('v', function() {
-            document.querySelector("[data-testid='fileReviewCheckbox']").click();
-        });
-    }, false);
+(function () {
+  "use strict";
+  window.addEventListener(
+    "load",
+    function () {
+      Mousetrap.bind("v", function () {
+        document.querySelector("[data-testid='fileReviewCheckbox']").click();
+      });
+    },
+    false
+  );
 })();

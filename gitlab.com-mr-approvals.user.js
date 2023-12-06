@@ -10,42 +10,53 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    setTimeout(function() {
-    document.querySelectorAll('li.merge-request').forEach(function(row) {
+(function () {
+  "use strict";
+  setTimeout(function () {
+    document.querySelectorAll("li.merge-request").forEach(function (row) {
+      let author = row.querySelector("span.author").innerText.trim();
+      let ownUserName =
+        document
+          .querySelector(".header-user .header-user-avatar")
+          ?.getAttribute("alt")
+          .trim() ??
+        document
+          .querySelector(".header-user .header-user-avatar")
+          ?.getAttribute("alt")
+          .trim() ??
+        "";
 
-        let author = row.querySelector('span.author').innerText.trim();
-        let ownUserName = document.querySelector('.header-user .header-user-avatar')?.getAttribute('alt').trim() ?? document.querySelector('.header-user .header-user-avatar')?.getAttribute('alt').trim() ?? '';
+      console.log(author, ownUserName);
 
-        console.log(author, ownUserName);
-
-        if (author === ownUserName) {
-            // own MR & no approvals = violetish
-            row.style.backgroundColor = '#ff00ff18';
-            row.dataset.ownMr = "true";
-        }
+      if (author === ownUserName) {
+        // own MR & no approvals = violetish
+        row.style.backgroundColor = "#ff00ff18";
+        row.dataset.ownMr = "true";
+      }
     });
 
-    document.querySelectorAll('.issuable-meta [title*=approv]').forEach(function(row) {
-
-        let approvals = row.getAttribute('title');
+    document
+      .querySelectorAll(".issuable-meta [title*=approv]")
+      .forEach(function (row) {
+        let approvals = row.getAttribute("title");
         let approvalsCount = approvals.match(/\d+/)[0];
 
-        row.innerHTML = row.innerHTML.replace("Approved", row.getAttribute('title'));
+        row.innerHTML = row.innerHTML.replace(
+          "Approved",
+          row.getAttribute("title")
+        );
         if (approvalsCount < 2) {
-            row.classList.remove("text-success");
-            row.classList.add("text-warning");
+          row.classList.remove("text-success");
+          row.classList.add("text-warning");
         } else if (approvalsCount >= 2) {
-            if (row.closest('li.merge-request').dataset.ownMr == 'true') {
-                // own merge request + approved = brigher green
-                row.closest('li.merge-request').style.backgroundColor = '#007f0080';
-            } else {
-                // others MRs approved = greenish
-                row.closest('li.merge-request').style.backgroundColor = '#007f0040';
-            }
+          if (row.closest("li.merge-request").dataset.ownMr == "true") {
+            // own merge request + approved = brigher green
+            row.closest("li.merge-request").style.backgroundColor = "#007f0080";
+          } else {
+            // others MRs approved = greenish
+            row.closest("li.merge-request").style.backgroundColor = "#007f0040";
+          }
         }
-    });
-    }, 1000);
+      });
+  }, 1000);
 })();
-

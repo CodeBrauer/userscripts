@@ -9,12 +9,18 @@
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=atlassian.net
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    let userName = document.querySelector('meta[name="ajs-remote-user-fullname"]').getAttribute('content');
-    setInterval(function() {
-        document.querySelectorAll('.ghx-content-main .ghx-issue [alt="Assignee: ' + userName + '"]').forEach(function(avatar) {
-            avatar.closest(".ghx-issue").style.backgroundColor = '#ffe1a2'
-        });
-    }, 1000);
+(function () {
+  "use strict";
+  let userName = document
+    .querySelector('meta[name="ajs-remote-user-fullname"]')
+    .getAttribute("content");
+  setInterval(function () {
+    document
+      .querySelectorAll(
+        '.ghx-content-main .ghx-issue [alt="Assignee: ' + userName + '"]'
+      )
+      .forEach(function (avatar) {
+        avatar.closest(".ghx-issue").style.backgroundColor = "#ffe1a2";
+      });
+  }, 1000);
 })();
