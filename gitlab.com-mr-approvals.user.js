@@ -12,10 +12,11 @@
 
 (function() {
     'use strict';
+    setTimeout(function() {
     document.querySelectorAll('li.merge-request').forEach(function(row) {
 
         let author = row.querySelector('span.author').innerText.trim();
-        let ownUserName = document.querySelector('.header-user .header-user-avatar').getAttribute('alt').trim();
+        let ownUserName = document.querySelector('.header-user .header-user-avatar')?.getAttribute('alt').trim() ?? document.querySelector('.header-user .header-user-avatar')?.getAttribute('alt').trim() ?? '';
 
         console.log(author, ownUserName);
 
@@ -45,5 +46,6 @@
             }
         }
     });
+    }, 1000);
 })();
 
