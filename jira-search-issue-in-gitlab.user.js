@@ -15,7 +15,7 @@
       "[data-component-selector^='jira.issue-view.issue-details']"
     );
     let headerElement = issueContainer.querySelector(
-      "button[aria-label='Add app']"
+      "[data-testid='issue.issue-view.views.issue-base.foundation.quick-add.quick-add-item.add-attachment']"
     ).parentElement;
     let issueKey = document
       .querySelector(
@@ -23,15 +23,18 @@
       )
       .innerText.trim();
 
-    let buttonCss = `margin-left: 10px;
-border: none;
-display: flex;
-align-items: center;
-justify-content: center;
-font-family: -apple-system, 'system-ui', 'Segoe UI', Roboto, Oxygen, Ubuntu, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-color: var(--ds-text, #42526E) !important;
-font-weight: 500;
-cursor: pointer;
+    let buttonCss = `margin-left: 2px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, 'system-ui', 'Segoe UI', Roboto, Oxygen, Ubuntu, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    color: var(--ds-text, #42526E) !important;
+    background: var(--ds-background-neutral, rgba(9, 30, 66, 0.04));
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 6px 10px;
     `;
 
     headerElement.innerHTML += `
